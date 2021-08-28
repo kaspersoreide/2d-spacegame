@@ -7,12 +7,12 @@ GLuint ParticleCluster::computeProgram;
 void ParticleCluster::loadPrograms() {
 	//geometry shader turns points into lines based on velocity
 	renderProgram = loadGeometryShader(
-		"shaders/particleVert.shader",
-		"shaders/particleGeom.shader",
-		"shaders/particleFrag.shader"
+		"shaders/particles/vert.glsl",
+		"shaders/particles/geom.glsl",
+		"shaders/particles/frag.glsl"
 	);
 	//compute shader makes changes in velocity and moves the particles
-	computeProgram = loadComputeShader("shaders/particleCompute.shader");
+	computeProgram = loadComputeShader("shaders/particles/compute.glsl");
 }
 
 ParticleCluster::ParticleCluster(int n) {

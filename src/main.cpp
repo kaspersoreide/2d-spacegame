@@ -11,23 +11,48 @@
 
 #include "particles.h"
 #include "random.h"
+#include "player.h"
+#include "asteroid.h"
 
 using namespace std;
 using namespace glm;
 
 //resolution of window in pixels
-const int RESX = 720;
-const int RESY = 720;
+const int RESX = 800;
+const int RESY = 800;
 
 GLFWwindow* window;
 bool closed = false;
 ParticleCluster* particles;
+Player* player;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (key == GLFW_KEY_SPACE) {
-		if (action == GLFW_PRESS) particles->toggleGravity();
-	}
-	if (key == GLFW_KEY_ESCAPE) closed = true;
+	switch(key) {
+        case GLFW_KEY_SPACE:
+	    	if (action == GLFW_PRESS) particles->toggleGravity();
+            break;
+	    case GLFW_KEY_ESCAPE:
+            closed = true;
+            break;
+        case GLFW_KEY_LEFT:
+            if (action == GLFW_PRESS) player->keyLeft = true;
+            else if (action == GLFW_RELEASE) player->keyLeft = false;
+            break;
+        case GLFW_KEY_RIGHT:
+            if (action == GLFW_PRESS) player->keyRight = true;
+            else if (action == GLFW_RELEASE) player->keyRight = false;
+            break;
+        case GLFW_KEY_UP:
+            if (action == GLFW_PRESS) player->keyUp = true;
+            else if (action == GLFW_RELEASE) player->keyUp = false;
+            break;
+        case GLFW_KEY_DOWN:
+            if (action == GLFW_PRESS) player->keyDown = true;
+            else if (action == GLFW_RELEASE) player->keyDown = false;
+            break;
+        default:
+            break;
+    }
 }
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -87,11 +112,24 @@ int main(void) {
 	ParticleCluster::loadPrograms();
 	//argument is number of particles
 	particles = new ParticleCluster(2000);
+    
+    vector<Asteroid*> asteroids;
+    for (int i = 0; i < 30; i++) {
+        asteroids.push_back(new Asteroid());
+    }
+    player = new Player();
+
 	while (!glfwWindowShouldClose(window) && !closed) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		particles->compute();
-		particles->render();
+		//particles->compute();
+		//particles->render();
+        for (Asteroid* a : asteroids) {
+            a->move();
+            a->render();
+        }
+        player->move();
+        player->render();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
