@@ -19,5 +19,6 @@ void Player::move() {
     }
     if (keyLeft) spin += rotAmount;
     if (keyRight) spin -= rotAmount;
+    spin *= 0.99f;
     Ship::move();
 }

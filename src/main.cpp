@@ -112,11 +112,11 @@ int main(void) {
 	ParticleCluster::loadPrograms();
 	//argument is number of particles
 	particles = new ParticleCluster(2000);
-    
+    rng::srand(122234);
     vector<Asteroid*> asteroids;
-    for (int i = 0; i < 30; i++) {
-        asteroids.push_back(new Asteroid());
-    }
+    //for (int i = 0; i < 5; i++) {
+    //    asteroids.push_back(new Asteroid());
+    //}
     player = new Player();
 
 	while (!glfwWindowShouldClose(window) && !closed) {
@@ -124,15 +124,40 @@ int main(void) {
 
 		//particles->compute();
 		//particles->render();
+
+        for (auto it = asteroids.begin(); it != asteroids.end(); ++it) {
+            player->collide(*it);
+            player->gravitate(*it);
+            for (auto it2 = it + 1; it2 != asteroids.end(); ++it2) {
+                (*it)->gravitate(*it2);
+                (*it)->collide(*it2);
+            }
+        }
+
         for (Asteroid* a : asteroids) {
             a->move();
-            a->render();
+            a->render(player->pos);
         }
+
         player->move();
-        player->render();
+        player->render(player->pos);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+        //asteroid cleanup
+        for (auto it = asteroids.begin(); it != asteroids.end();) {
+            Asteroid* a = *it;
+            if (length(a->pos - player->pos) > 3.0f || a->HP <= 0) {
+                it = asteroids.erase(it);
+            } 
+            else {
+                ++it;
+            }
+        }
+        ////asteroid spawn
+        while (asteroids.size() < 10) {
+            asteroids.push_back(new Asteroid(player->pos));
+        }
 	}
 
 	glfwTerminate();

@@ -6,8 +6,6 @@ struct Data {
 	vec2 vel;
 };
 
-//hello
-
 layout(std430, binding = 0) buffer InBuf 
 {
 	Data din[];

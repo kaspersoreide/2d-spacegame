@@ -5,4 +5,5 @@
 class Asteroid : public Thing {
 public:
     Asteroid();
+    Asteroid(vec2 playerPos);
 };
