@@ -147,7 +147,7 @@ int main(void) {
         //asteroid cleanup
         for (auto it = asteroids.begin(); it != asteroids.end();) {
             Asteroid* a = *it;
-            if (length(a->pos - player->pos) > 3.0f || a->HP <= 0) {
+            if (length(a->pos - player->pos) > 7.0f || a->HP <= 0) {
                 it = asteroids.erase(it);
             } 
             else {
@@ -155,7 +155,7 @@ int main(void) {
             }
         }
         ////asteroid spawn
-        while (asteroids.size() < 10) {
+        while (asteroids.size() < 5) {
             asteroids.push_back(new Asteroid(player->pos));
         }
 	}

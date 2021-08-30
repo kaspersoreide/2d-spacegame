@@ -20,9 +20,8 @@ Asteroid::Asteroid() {
     }
     loadVAO();
     collisionHulls.push_back(vertices);
-    
 }
 
 Asteroid::Asteroid(vec2 playerPos) : Asteroid() {
-    pos = 3.0f * rng::randvec2() + playerPos;
+    pos = 4.0f * rng::randvec2() + playerPos;
 }

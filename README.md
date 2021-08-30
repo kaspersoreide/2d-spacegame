@@ -1,2 +1,2 @@
 # 2d-particles
-Simple particle simulator using a compute shader. Written in C++ with OpenGL
+Asteroids rip off written in c++ and OpenGL.
