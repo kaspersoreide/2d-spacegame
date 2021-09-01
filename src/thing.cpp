@@ -19,6 +19,7 @@ Thing::Thing(vec2 pos, vec2 vel, float radius, float spin, vec3 color)
 
 void Thing::move() {
 	pos += vel;
+    pos = mod(pos, 10.0f);
 	Rotation = rotate(Rotation, spin);
     Model = mat3(
         Rotation[0][0], Rotation[0][1], 0.0f,
@@ -39,7 +40,7 @@ void Thing::moveReverse() {
 
 
 void Thing::gravitate(Thing* other) {
-    const float G = 0.000003f;
+    const float G = 0.00003f;
     vec2 dir = other->pos - pos;
     vec2 force = G * dir / dot(dir, dir);
     vel += force;
@@ -138,8 +139,8 @@ void Thing::collide(Thing* other) {
 	other->spin = (tangentThat[0] * r2[1] - tangentThat[1] * r2[0]) / dot(r2, r2);
 
     //remove HP
-    HP -= m1 * dot(dv, dv);
-    other->HP -= m2 * dot(dv, dv);
+    HP -= maxHP;//300 * other->mass * dot(dv, dv);
+    other->HP -= other->maxHP;//300 * mass * dot(dv, dv);
 }
 
 Thing::~Thing() {

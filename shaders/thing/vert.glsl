@@ -18,8 +18,8 @@ vec3 torusMap(vec2 planePos, float radius, float thickness) {
 
 void main() {
     vec3 realPos = Model * vec3(pos, 1.0);
-    if (length(Model[2]) > 2.0) {
-        realPos.xy *= 1.0 / (length(realPos.xy) * (1.0 + exp(-(0.1 * dot(realPos.xy, realPos.xy) - 2.0))));
-    }
-    gl_Position = vec4(realPos, 1.0);
+    //if (length(Model[2]) > 2.0) {
+    //    realPos.xy *= 1.0 / (length(realPos.xy) * (1.0 + exp(-(0.1 * dot(realPos.xy, realPos.xy) - 2.0))));
+    //}
+    gl_Position = vec4(0.2 * realPos, 1.0);
 }

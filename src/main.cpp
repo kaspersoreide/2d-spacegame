@@ -18,12 +18,11 @@ using namespace std;
 using namespace glm;
 
 //resolution of window in pixels
-const int RESX = 800;
-const int RESY = 800;
+const int RESX = 900;
+const int RESY = 900;
 
 GLFWwindow* window;
 bool closed = false;
-ParticleCluster* particles;
 Player* player;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -53,13 +52,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         default:
             break;
     }
-}
-
-void cursorCallback(GLFWwindow* window, double xpos, double ypos) {
-	float x = float(xpos);
-	float y = float(ypos);
-
-	particles->setOrigin(2.f * x / RESX - 1.f, -2.f * y / RESY + 1.f);
 }
 
 int init() {
@@ -111,49 +103,60 @@ int main(void) {
 	if (init() == -1) return -1;
 	ParticleCluster::loadPrograms();
 	//argument is number of particles
-	particles = new ParticleCluster(2000);
-    rng::srand(122234);
+    rng::srand(1222334);
     vector<Asteroid*> asteroids;
     //for (int i = 0; i < 5; i++) {
     //    asteroids.push_back(new Asteroid());
     //}
+    vec2 camera(5.0f);
     player = new Player();
 
 	while (!glfwWindowShouldClose(window) && !closed) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//particles->compute();
-		//particles->render();
-
         for (auto it = asteroids.begin(); it != asteroids.end(); ++it) {
             player->collide(*it);
-            player->gravitate(*it);
+            //player->gravitate(*it);
             for (auto it2 = it + 1; it2 != asteroids.end(); ++it2) {
-                (*it)->gravitate(*it2);
+                //(*it)->gravitate(*it2);
                 (*it)->collide(*it2);
             }
         }
 
         for (Asteroid* a : asteroids) {
             a->move();
-            a->render(player->pos);
+            a->render(camera);
         }
-
         player->move();
-        player->render(player->pos);
+        
+        //camera += 0.001f * (player->pos - camera);
+        player->render(camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
         //asteroid cleanup
         for (auto it = asteroids.begin(); it != asteroids.end();) {
             Asteroid* a = *it;
-            if (length(a->pos - player->pos) > 7.0f || a->HP <= 0) {
-                it = asteroids.erase(it);
+            //a->vel -= player->vel;
+            if (a->HP <= 0) {
+                if (a->points.size() > 7) {
+                    Asteroid *a1, *a2;
+                    a->split(&a1, &a2);
+                    asteroids.erase(it);
+                    //it = asteroids.begin();
+                    asteroids.push_back(a1);
+                    asteroids.push_back(a2);
+                    break;
+                }
+                else {
+                    it = asteroids.erase(it);
+                }
             } 
             else {
                 ++it;
             }
         }
+        //player->vel = vec2(0.0f);
         ////asteroid spawn
         while (asteroids.size() < 5) {
             asteroids.push_back(new Asteroid(player->pos));

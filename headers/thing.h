@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <vector>
+#define SPACE_SIZE 10.0f
 
 using namespace glm;
 
@@ -24,7 +25,6 @@ public:
     void render(vec2 camerapos);
 	void move();
     void moveReverse();
-    void setSpin(float spin);
 protected:
     GLuint VAO;
     static GLuint program;
